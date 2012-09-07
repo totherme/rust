@@ -41,6 +41,13 @@ uintptr_t *global_safe_points = 0;
 
 void
 update_gc_metadata(const void* map) {
+#if defined(__MINGW32__) || defined(_WINDOWS)
+    global_safe_points = (uintptr_t *)malloc(sizeof(uintptr_t));
+    if (!global_safe_points) return;
+    *global_safe_points = 0;
+    return;
+#endif
+
     std::vector<safe_point> safe_points;
     update_gc_entry_args args = { &safe_points };
 
